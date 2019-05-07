@@ -10,7 +10,7 @@ using TimeTrackingService.Models;
 namespace TimeTrackingService.Controllers
 {
     [Produces("application/json")]
-    [Route("api/TimeRegistration")]
+    [Route("api/TimeRegistrations")]
     public class TimeRegistrationsController : Controller
     {
         private readonly TimeTrackingServiceContext _context;
@@ -20,14 +20,14 @@ namespace TimeTrackingService.Controllers
             _context = context;
         }
 
-        // GET: api/TimeRegistration
+        // GET: api/TimeRegistrations
         [HttpGet]
         public IEnumerable<TimeRegistration> GetTimeRegistration()
         {
             return _context.TimeRegistrations;
         }
 
-        // GET: api/TimeRegistration/5
+        // GET: api/TimeRegistrations/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTimeRegistration([FromRoute] int id)
         {
@@ -46,7 +46,7 @@ namespace TimeTrackingService.Controllers
             return Ok(timeRegistration);
         }
 
-        // PUT: api/TimeRegistration/5
+        // PUT: api/TimeRegistrations/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTimeRegistration([FromRoute] int id, [FromBody] TimeRegistration timeRegistration)
         {
