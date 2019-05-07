@@ -44,40 +44,42 @@ namespace TimeTrackingService.Controllers
                 return NotFound();
             }
 
-            List<ProjectComplexDto> customerProjectsDtos = new List<ProjectComplexDto>();
+            List<ProjectDto> customerProjectsDtos = new List<ProjectDto>();
 
             foreach (var customerProject in projects)
             {
-                ProjectComplexDto projectDto = new ProjectComplexDto();
-                projectDto.TimeRegistrations = new List<TimeRegistrationDto>();
+                ProjectDto projectDto = new ProjectDto();
+                projectDto.Id = customerProject.ProjectId;
+                projectDto.Name = customerProject.Name;
+                //projectDto.TimeRegistrations = new List<TimeRegistrationDto>();
 
-                var project = await _context.Projects.
-                    Include("TimeRegistrations").SingleOrDefaultAsync(m => m.ProjectId == customerProject.ProjectId);
+                //var project = await _context.Projects.
+                //    Include("TimeRegistrations").SingleOrDefaultAsync(m => m.ProjectId == customerProject.ProjectId);
 
-                projectDto.Id = project.ProjectId;
-                projectDto.Name = project.Name;
+                //projectDto.Id = project.ProjectId;
+                //projectDto.Name = project.Name;
 
 
-                foreach (var ptr in project.TimeRegistrations)
-                {
-                    ptr.WorkType =
-                        _context.WorkTypes.Single(c => c.WorkTypeId == ptr.WorkTypeId);
-                    ptr.WorkType.TimeRegistrations = null;
+                //foreach (var ptr in project.TimeRegistrations)
+                //{
+                //    ptr.WorkType =
+                //        _context.WorkTypes.Single(c => c.WorkTypeId == ptr.WorkTypeId);
+                //    ptr.WorkType.TimeRegistrations = null;
 
-                    TimeRegistrationDto trdto = new TimeRegistrationDto()
-                    {
-                        Date = ptr.Date,
-                        Duration = ptr.Duration,
-                        Sum = ptr.Duration * ptr.WorkType.Price,
-                        Price = ptr.WorkType.Price,
-                        WorkTypeName = ptr.WorkType.Name,
-                        TimeRegistrationId = ptr.TimeRegistrationId
-                    };
+                //    TimeRegistrationDto trdto = new TimeRegistrationDto()
+                //    {
+                //        Date = ptr.Date,
+                //        Duration = ptr.Duration,
+                //        Sum = ptr.Duration * ptr.WorkType.Price,
+                //        Price = ptr.WorkType.Price,
+                //        WorkTypeName = ptr.WorkType.Name,
+                //        TimeRegistrationId = ptr.TimeRegistrationId
+                //    };
 
-                    projectDto.TimeRegistrations.Add(trdto);
-                }
+                //    projectDto.TimeRegistrations.Add(trdto);
+                //}
 
-                projectDto.TotalSum = projectDto.TimeRegistrations.Sum(item => item.Sum);
+                //projectDto.TotalSum = projectDto.TimeRegistrations.Sum(item => item.Sum);
 
                 customerProjectsDtos.Add(projectDto);
             }
