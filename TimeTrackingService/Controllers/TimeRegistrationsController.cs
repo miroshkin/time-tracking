@@ -81,16 +81,20 @@ namespace TimeTrackingService.Controllers
             return NoContent();
         }
 
-        // POST: api/TimeRegistration
+        // POST: api/TimeRegistrations?projectId={id}
         [HttpPost]
-        public async Task<IActionResult> PostTimeRegistration([FromBody] TimeRegistration timeRegistration)
+        public async Task<IActionResult> PostTimeRegistration([FromBody] TimeRegistration timeRegistration, int projectId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.TimeRegistrations.Add(timeRegistration);
+            _context.Add(timeRegistration);
+
+            var project = _context.Projects.Include("TimeRegistrations").First(p => p.ProjectId == projectId);
+            project.TimeRegistrations.Add(timeRegistration);
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTimeRegistration", new { id = timeRegistration.TimeRegistrationId }, timeRegistration);
