@@ -13,6 +13,8 @@ namespace TimeTrackingService.Models
 
         public string WorkTypeName { get; set; }
 
+        public int WorkTypeId { get; set; }
+
         public double Price { get; set; }
 
         public int Duration { get; set; }

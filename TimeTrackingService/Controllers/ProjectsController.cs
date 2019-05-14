@@ -126,6 +126,7 @@ namespace TimeTrackingService.Controllers
                     Sum = ptr.Duration * ptr.WorkType.Price,
                     Price = ptr.WorkType.Price,
                     WorkTypeName = ptr.WorkType.Name,
+                    WorkTypeId = ptr.WorkTypeId,
                     TimeRegistrationId = ptr.TimeRegistrationId
                 };
 
