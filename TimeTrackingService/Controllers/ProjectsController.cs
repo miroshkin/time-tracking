@@ -27,84 +27,22 @@ namespace TimeTrackingService.Controllers
             return _context.Projects.Select(c => new ProjectDto(){Id = c.ProjectId, Name = c.Name});
         }
 
-        // GET: api/Projects/Customer/5
-        [HttpGet("Customers/{id}")]
-        public async Task<IActionResult> GetProjectsByCustomerId([FromRoute] int id)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var projects = _context.Projects.Where(m => m.CustomerId == id);
-
-            if (projects == null || !projects.Any())
-            {
-                return NotFound();
-            }
-
-            List<ProjectDto> customerProjectsDtos = new List<ProjectDto>();
-
-            foreach (var customerProject in projects)
-            {
-                ProjectDto projectDto = new ProjectDto();
-                projectDto.Id = customerProject.ProjectId;
-                projectDto.Name = customerProject.Name;
-                //projectDto.TimeRegistrations = new List<TimeRegistrationDto>();
-
-                //var project = await _context.Projects.
-                //    Include("TimeRegistrations").SingleOrDefaultAsync(m => m.ProjectId == customerProject.ProjectId);
-
-                //projectDto.Id = project.ProjectId;
-                //projectDto.Name = project.Name;
-
-
-                //foreach (var ptr in project.TimeRegistrations)
-                //{
-                //    ptr.WorkType =
-                //        _context.WorkTypes.Single(c => c.WorkTypeId == ptr.WorkTypeId);
-                //    ptr.WorkType.TimeRegistrations = null;
-
-                //    TimeRegistrationDto trdto = new TimeRegistrationDto()
-                //    {
-                //        Date = ptr.Date,
-                //        Duration = ptr.Duration,
-                //        Sum = ptr.Duration * ptr.WorkType.Price,
-                //        Price = ptr.WorkType.Price,
-                //        WorkTypeName = ptr.WorkType.Name,
-                //        TimeRegistrationId = ptr.TimeRegistrationId
-                //    };
-
-                //    projectDto.TimeRegistrations.Add(trdto);
-                //}
-
-                //projectDto.TotalSum = projectDto.TimeRegistrations.Sum(item => item.Sum);
-
-                customerProjectsDtos.Add(projectDto);
-            }
-
-            
-
-            
-
-            return Ok(customerProjectsDtos);
-        }
-
         // GET: api/Projects/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProject([FromRoute] int id)
         {
-
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            if (!ProjectExists(id))
+            {
+                return NotFound();
+            }
+
             ProjectComplexDto projectDto = new ProjectComplexDto();
             projectDto.TimeRegistrations = new List<TimeRegistrationDto>();
-
 
             var project = await _context.Projects.
                 Include("TimeRegistrations").SingleOrDefaultAsync(m => m.ProjectId == id);
@@ -134,11 +72,6 @@ namespace TimeTrackingService.Controllers
             }
 
             projectDto.TotalSum = projectDto.TimeRegistrations.Sum(item => item.Sum);
-
-            if (project == null)
-            {
-                return NotFound();
-            }
 
             return Ok(projectDto);
         }
