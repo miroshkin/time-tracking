@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +25,24 @@ namespace TimeTrackingService.Controllers
         [HttpGet]
         public IEnumerable<ProjectDto> GetProject()
         {
-            return _context.Projects.Select(c => new ProjectDto(){Id = c.ProjectId, Name = c.Name});
+            var customers = _context.Customers.Include("Projects").ToList();
+
+            var result = new List<ProjectDto>();
+
+            foreach (var customer in customers)
+            {
+                foreach (var project in customer.Projects)
+                {
+                    result.Add(new ProjectDto()
+                    {
+                        CustomerName = customer.Name,
+                        Id = project.ProjectId,
+                        Name = project.Name
+                    });
+                }
+            }
+
+            return result;
         }
 
         // GET: api/Projects/5
